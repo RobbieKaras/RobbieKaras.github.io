@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ tag }} — {{ site.title }}{% endblock %}
+{% block canonical %}{{ abs_url('/tags/' ~ tag|slug ~ '/') }}{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ url('/tags/') }}">Tags</a>
+  <span aria-hidden="true">/</span>
+  <span>{{ tag }}</span>
+</nav>
+
+<header class="page-head">
+  <h1>{{ tag }}</h1>
+  <p class="page-sub">{{ docs|length }} entr{{ 'y' if docs|length == 1 else 'ies' }}</p>
+</header>
+
+<ul class="entry-list">
+  {% for doc in docs %}
+  <li class="entry-row">
+    <time class="entry-date" datetime="{{ doc.date|isodate }}">{{ doc.date|shortdate }}</time>
+    <span class="entry-body">
+      <a class="entry-title" href="{{ doc.url }}">{{ doc.title }}</a>
+      <span class="entry-context">{{ doc.context_name }}</span>
+    </span>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

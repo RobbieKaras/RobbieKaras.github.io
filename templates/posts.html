@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Posts — {{ site.title }}{% endblock %}
+{% block description %}Writing by {{ site.author }} that isn't tied to a single project.{% endblock %}
+{% block canonical %}{{ abs_url('/posts/') }}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <h1>Posts</h1>
+  <p class="page-sub">Writing that isn't tied to one project.</p>
+</header>
+
+{% if posts %}
+<ol class="log-list">
+  {% for doc in posts %}
+  <li class="log-item">
+    <time class="log-date" datetime="{{ doc.date|isodate }}">{{ doc.date|datefmt }}</time>
+    <h2 class="log-title"><a href="{{ doc.url }}">{{ doc.title }}</a></h2>
+    <p class="log-summary">{{ doc.summary }}</p>
+    {% if doc.tags %}
+    <p class="tag-row">
+      {% for tag in doc.tags %}<a class="tag" href="{{ url('/tags/' ~ tag|slug ~ '/') }}">{{ tag }}</a>{% endfor %}
+    </p>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{% else %}
+<p class="empty">No posts yet.</p>
+{% endif %}
+{% endblock %}

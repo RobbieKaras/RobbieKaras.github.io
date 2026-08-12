@@ -1,0 +1,19 @@
+# build output — never commit this, GitHub Actions rebuilds it
+site/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# resume — kept locally, not committed (it's on LinkedIn and updated often)
+*.pdf
+Robbie Karas Resume.pdf

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} — {{ site.title }}{% endblock %}
+{% block canonical %}{{ site.url.rstrip('/') }}{{ page.url }}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <h1>{{ page.title }}</h1>
+</header>
+
+<div class="prose">
+  {{ page.body_html|safe }}
+</div>
+{% endblock %}

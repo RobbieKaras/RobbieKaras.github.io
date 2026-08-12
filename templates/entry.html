@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.title }} — {{ site.title }}{% endblock %}
+{% block description %}{{ doc.summary }}{% endblock %}
+{% block canonical %}{{ site.url.rstrip('/') }}{{ doc.url }}{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  {% if project %}
+  <a href="{{ url('/projects/') }}">Projects</a>
+  <span aria-hidden="true">/</span>
+  <a href="{{ project.url }}">{{ project.title }}</a>
+  {% else %}
+  <a href="{{ url('/posts/') }}">Posts</a>
+  {% endif %}
+</nav>
+
+<article class="entry">
+  <header class="entry-head">
+    <h1>{{ doc.title }}</h1>
+    <p class="entry-meta">
+      <time datetime="{{ doc.date|isodate }}">{{ doc.date|datefmt }}</time>
+      {% if doc.tags %}
+      <span class="tag-row">
+        {% for tag in doc.tags %}<a class="tag" href="{{ url('/tags/' ~ tag|slug ~ '/') }}">{{ tag }}</a>{% endfor %}
+      </span>
+      {% endif %}
+    </p>
+  </header>
+
+  <div class="prose">
+    {{ doc.body_html|safe }}
+  </div>
+</article>
+
+{% if newer or older %}
+<nav class="entry-nav" aria-label="More entries">
+  <div class="nav-side">
+    {% if older %}
+    <a href="{{ older.url }}">
+      <span class="nav-label">← Previous</span>
+      <span class="nav-title">{{ older.title }}</span>
+    </a>
+    {% endif %}
+  </div>
+  <div class="nav-side nav-right">
+    {% if newer %}
+    <a href="{{ newer.url }}">
+      <span class="nav-label">Next →</span>
+      <span class="nav-title">{{ newer.title }}</span>
+    </a>
+    {% endif %}
+  </div>
+</nav>
+{% endif %}
+{% endblock %}

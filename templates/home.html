@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ site.title }} — {{ site.tagline }}{% endblock %}
+{% block canonical %}{{ abs_url('/') }}{% endblock %}
+
+{% block content %}
+<section class="intro">
+  <div class="prose">
+    {{ intro_html|safe }}
+  </div>
+  <p class="intro-links">
+    {% for link in site.links %}
+    <a class="pill" href="{{ link.url }}">{{ link.name }}</a>
+    {% endfor %}
+  </p>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Projects</h2>
+  {% if projects %}
+  <ul class="project-list">
+    {% for project in projects %}
+    <li class="project-card">
+      <h3><a href="{{ project.url }}">{{ project.title }}</a></h3>
+      {% if project.summary %}<p class="project-summary">{{ project.summary }}</p>{% endif %}
+      {% if project.tech %}
+      <p class="tech-row">
+        {% for item in project.tech %}<span class="tech">{{ item }}</span>{% endfor %}
+      </p>
+      {% endif %}
+      <p class="project-meta">
+        {% if project.updates %}
+        {{ project.updates|length }} update{{ '' if project.updates|length == 1 else 's' }}
+        · latest {{ project.latest_date|shortdate }}
+        {% else %}
+        No updates yet
+        {% endif %}
+        {% if project.repo %} · <a href="{{ project.repo }}">Source</a>{% endif %}
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">No projects yet.</p>
+  {% endif %}
+</section>
+
+{% if recent_updates %}
+<section class="section">
+  <h2 class="section-title">Recent updates</h2>
+  <ul class="entry-list">
+    {% for doc in recent_updates %}
+    <li class="entry-row">
+      <time class="entry-date" datetime="{{ doc.date|isodate }}">{{ doc.date|shortdate }}</time>
+      <span class="entry-body">
+        <a class="entry-title" href="{{ doc.url }}">{{ doc.title }}</a>
+        <span class="entry-context">{{ doc.context_name }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if recent_posts %}
+<section class="section">
+  <h2 class="section-title">Posts</h2>
+  <ul class="entry-list">
+    {% for doc in recent_posts %}
+    <li class="entry-row">
+      <time class="entry-date" datetime="{{ doc.date|isodate }}">{{ doc.date|shortdate }}</time>
+      <span class="entry-body">
+        <a class="entry-title" href="{{ doc.url }}">{{ doc.title }}</a>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="more"><a href="{{ url('/posts/') }}">All posts →</a></p>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Tags — {{ site.title }}{% endblock %}
+{% block canonical %}{{ abs_url('/tags/') }}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <h1>Tags</h1>
+</header>
+
+{% if tags %}
+<p class="tag-cloud">
+  {% for tag, docs in tags %}
+  <a class="tag tag-lg" href="{{ url('/tags/' ~ tag|slug ~ '/') }}">{{ tag }} <span class="tag-count">{{ docs|length }}</span></a>
+  {% endfor %}
+</p>
+{% else %}
+<p class="empty">Nothing tagged yet.</p>
+{% endif %}
+{% endblock %}

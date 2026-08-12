@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Not found — {{ site.title }}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <h1>Not found</h1>
+  <p class="page-sub">That page doesn't exist, or it moved.</p>
+</header>
+
+<p><a href="{{ url('/') }}">← Back to the homepage</a></p>
+{% endblock %}

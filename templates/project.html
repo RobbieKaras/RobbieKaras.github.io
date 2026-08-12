@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — {{ site.title }}{% endblock %}
+{% block description %}{{ project.summary or (project.title ~ ' — project log.') }}{% endblock %}
+{% block canonical %}{{ abs_url('/projects/' ~ project.slug ~ '/') }}{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ url('/projects/') }}">Projects</a>
+  <span aria-hidden="true">/</span>
+  <span>{{ project.title }}</span>
+</nav>
+
+<header class="page-head">
+  <h1>{{ project.title }}</h1>
+  {% if project.summary %}<p class="page-sub">{{ project.summary }}</p>{% endif %}
+  <p class="project-meta">
+    {% if project.status %}<span class="status">{{ project.status }}</span>{% endif %}
+    {% if project.repo %}<a href="{{ project.repo }}">Source on GitHub</a>{% endif %}
+  </p>
+  {% if project.tech %}
+  <p class="tech-row">
+    {% for item in project.tech %}<span class="tech">{{ item }}</span>{% endfor %}
+  </p>
+  {% endif %}
+</header>
+
+{% if project.body_html %}
+<div class="prose project-overview">
+  {{ project.body_html|safe }}
+</div>
+{% endif %}
+
+<section class="section">
+  <h2 class="section-title">Log</h2>
+  {% if project.updates %}
+  <ol class="log-list">
+    {% for doc in project.updates %}
+    <li class="log-item">
+      <time class="log-date" datetime="{{ doc.date|isodate }}">{{ doc.date|datefmt }}</time>
+      <h3 class="log-title"><a href="{{ doc.url }}">{{ doc.title }}</a></h3>
+      <p class="log-summary">{{ doc.summary }}</p>
+      {% if doc.tags %}
+      <p class="tag-row">
+        {% for tag in doc.tags %}<a class="tag" href="{{ url('/tags/' ~ tag|slug ~ '/') }}">{{ tag }}</a>{% endfor %}
+      </p>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">No updates logged yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title }}</title>
+    <link>{{ abs_url('/') }}</link>
+    <description>{{ site.description }}</description>
+    <language>en-us</language>
+    <lastBuildDate>{{ build_date|rfc822 }}</lastBuildDate>
+    <atom:link href="{{ abs_url('/feed.xml') }}" rel="self" type="application/rss+xml"/>
+    {% for doc in docs %}
+    <item>
+      <title>{{ doc.title }}{% if doc.project %} ({{ doc.project.title }}){% endif %}</title>
+      <link>{{ site.url.rstrip('/') }}{{ doc.url }}</link>
+      <guid isPermaLink="true">{{ site.url.rstrip('/') }}{{ doc.url }}</guid>
+      <pubDate>{{ doc.date|rfc822 }}</pubDate>
+      <description>{{ doc.summary }}</description>
+      {% for tag in doc.tags %}
+      <category>{{ tag }}</category>
+      {% endfor %}
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

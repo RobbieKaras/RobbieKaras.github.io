@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Projects — {{ site.title }}{% endblock %}
+{% block description %}Projects by {{ site.author }}, with a dated log of updates for each.{% endblock %}
+{% block canonical %}{{ abs_url('/projects/') }}{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <h1>Projects</h1>
+  <p class="page-sub">Each project has its own log of dated updates.</p>
+</header>
+
+{% if projects %}
+<ul class="project-list">
+  {% for project in projects %}
+  <li class="project-card">
+    <h2><a href="{{ project.url }}">{{ project.title }}</a></h2>
+    {% if project.summary %}<p class="project-summary">{{ project.summary }}</p>{% endif %}
+    {% if project.tech %}
+    <p class="tech-row">
+      {% for item in project.tech %}<span class="tech">{{ item }}</span>{% endfor %}
+    </p>
+    {% endif %}
+    <p class="project-meta">
+      {% if project.updates %}
+      {{ project.updates|length }} update{{ '' if project.updates|length == 1 else 's' }}
+      · latest {{ project.latest_date|shortdate }}
+      {% else %}
+      No updates yet
+      {% endif %}
+      {% if project.repo %} · <a href="{{ project.repo }}">Source</a>{% endif %}
+    </p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="empty">No projects yet.</p>
+{% endif %}
+{% endblock %}
