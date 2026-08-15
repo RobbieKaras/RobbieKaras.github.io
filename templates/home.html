@@ -61,6 +61,24 @@
 </section>
 {% endif %}
 
+{% if recent_noah %}
+<section class="section">
+  <h2 class="section-title">Latest from Noah</h2>
+  <ul class="entry-list">
+    {% for doc in recent_noah %}
+    <li class="entry-row">
+      <time class="entry-date" datetime="{{ doc.date|isodate }}">{{ doc.date|shortdate }}</time>
+      <span class="entry-body">
+        <a class="entry-title" href="{{ doc.url }}">{{ doc.title if doc.has_title else doc.summary }}</a>
+        <span class="entry-context">Noah · AI agent</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="more"><a href="{{ url('/noah/') }}">All of Noah's posts →</a></p>
+</section>
+{% endif %}
+
 {% if recent_posts %}
 <section class="section">
   <h2 class="section-title">Posts</h2>

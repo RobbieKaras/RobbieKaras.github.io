@@ -158,13 +158,16 @@ class Doc:
     summary: str
     body_html: str
     source: Path
-    kind: str = "post"            # "post" | "update"
+    kind: str = "post"            # "post" | "update" | "noah"
     project: "Project | None" = None
     draft: bool = False
+    has_title: bool = True        # False = an untitled short note (feed style)
 
     @property
     def context_name(self) -> str:
-        return self.project.title if self.project else "Post"
+        if self.project:
+            return self.project.title
+        return {"noah": "Noah", "post": "Post"}.get(self.kind, "Post")
 
 
 @dataclass
@@ -209,7 +212,8 @@ def load_doc(path: Path, *, kind: str, url_for_slug, project=None) -> Doc | None
         print(f"  ! {path.relative_to(ROOT)}: no date in frontmatter or filename, "
               f"using file modified date ({entry_date})")
 
-    title = meta.get("title") or h1_title or file_slug.replace("-", " ").capitalize()
+    explicit_title = meta.get("title") or h1_title
+    title = explicit_title or file_slug.replace("-", " ").capitalize()
     slug = slugify(meta.get("slug") or file_slug)
     body_html = render_markdown(body)
 
@@ -225,6 +229,7 @@ def load_doc(path: Path, *, kind: str, url_for_slug, project=None) -> Doc | None
         kind=kind,
         project=project,
         draft=bool(meta.get("draft", False)),
+        has_title=bool(explicit_title),
     )
 
 
@@ -291,6 +296,30 @@ def load_posts() -> list[Doc]:
     return posts
 
 
+def load_noah() -> list[Doc]:
+    """Noah is an AI agent who pushes his own Markdown into content/noah/.
+
+    Entries are dated-URL'd (like project updates) so short notes that share a
+    slug on different days never collide. Titled files render as full posts;
+    untitled files render inline as feed notes.
+    """
+    root = CONTENT / "noah"
+    if not root.is_dir():
+        return []
+    notes = []
+    for md_file in sorted(root.glob("*.md")):
+        if md_file.name.startswith("_"):
+            continue
+        doc = load_doc(
+            md_file, kind="noah",
+            url_for_slug=lambda d, s: url(f"/noah/{d.isoformat()}-{s}/"),
+        )
+        if doc and not doc.draft:
+            notes.append(doc)
+    notes.sort(key=lambda d: (d.date, d.slug), reverse=True)
+    return notes
+
+
 def load_pages() -> list[Page]:
     pages = []
     for md_file in sorted(CONTENT.glob("*.md")):
@@ -308,13 +337,13 @@ def load_pages() -> list[Page]:
     return pages
 
 
-def load_home_intro() -> str:
-    intro_file = CONTENT / "_home.md"
-    if not intro_file.exists():
+def load_intro(path: Path) -> str:
+    """Render an optional intro file (drops a leading H1), or return ''."""
+    if not path.exists():
         return ""
-    _, body = split_frontmatter(intro_file)
+    _, body = split_frontmatter(path)
     _, body = pop_h1(body)
-    return render_markdown(body)
+    return render_markdown(body) if body.strip() else ""
 
 
 # --------------------------------------------------------------------------
@@ -380,11 +409,14 @@ def build() -> None:
 
     projects = load_projects()
     posts = load_posts()
+    noah = load_noah()
     pages = load_pages()
-    intro_html = load_home_intro()
+    intro_html = load_intro(CONTENT / "_home.md")
+    noah_intro_html = load_intro(CONTENT / "noah" / "_about.md")
 
     all_updates = [u for p in projects for u in p.updates]
-    all_docs = sorted(all_updates + posts, key=lambda d: (d.date, d.slug), reverse=True)
+    all_docs = sorted(all_updates + posts + noah,
+                      key=lambda d: (d.date, d.slug), reverse=True)
 
     tags: dict[str, list[Doc]] = {}
     for doc in all_docs:
@@ -415,7 +447,8 @@ def build() -> None:
               intro_html=intro_html,
               projects=projects,
               recent_posts=posts[:SITE["home_recent_posts"]],
-              recent_updates=all_updates[:SITE["home_recent_updates"]])
+              recent_updates=all_updates[:SITE["home_recent_updates"]],
+              recent_noah=noah[:SITE["home_recent_noah"]])
 
     # projects index + one page per project + one page per update
     render_to(env, "projects.html", "projects/index.html",
@@ -441,6 +474,16 @@ def build() -> None:
         render_to(env, "entry.html", f"posts/{doc.slug}/index.html",
                   active="posts", doc=doc, project=None, newer=newer, older=older)
 
+    # noah's section: feed-style index + one page per note
+    render_to(env, "noah.html", "noah/index.html",
+              active="noah", notes=noah, intro_html=noah_intro_html)
+    for i, doc in enumerate(noah):
+        newer = noah[i - 1] if i > 0 else None
+        older = noah[i + 1] if i + 1 < len(noah) else None
+        render_to(env, "entry.html",
+                  f"noah/{doc.date.isoformat()}-{doc.slug}/index.html",
+                  active="noah", doc=doc, project=None, newer=newer, older=older)
+
     # standalone pages (about.md, etc.)
     for page in pages:
         render_to(env, "page.html", f"{page.slug}/index.html",
@@ -461,7 +504,8 @@ def build() -> None:
     render_to(env, "404.html", "404.html", active="")
 
     print(f"  {len(projects)} projects, {len(all_updates)} updates, "
-          f"{len(posts)} posts, {len(pages)} pages, {len(sorted_tags)} tags")
+          f"{len(posts)} posts, {len(noah)} noah, {len(pages)} pages, "
+          f"{len(sorted_tags)} tags")
     print(f"  -> {OUTPUT}")
 
 

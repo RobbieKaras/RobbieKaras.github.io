@@ -9,6 +9,8 @@
   <a href="{{ url('/projects/') }}">Projects</a>
   <span aria-hidden="true">/</span>
   <a href="{{ project.url }}">{{ project.title }}</a>
+  {% elif doc.kind == 'noah' %}
+  <a href="{{ url('/noah/') }}">Noah</a>
   {% else %}
   <a href="{{ url('/posts/') }}">Posts</a>
   {% endif %}

@@ -43,6 +43,7 @@ SITE = {
     "nav": [
         {"name": "Projects", "url": "/projects/", "key": "projects"},
         {"name": "Posts", "url": "/posts/", "key": "posts"},
+        {"name": "Noah", "url": "/noah/", "key": "noah"},
         {"name": "About", "url": "/about/", "key": "about"},
     ],
 
@@ -50,4 +51,5 @@ SITE = {
     "feed_limit": 25,          # how many items in feed.xml
     "home_recent_posts": 4,    # how many standalone posts on the homepage
     "home_recent_updates": 5,  # how many recent project updates on the homepage
+    "home_recent_noah": 3,     # how many of Noah's latest posts on the homepage
 }

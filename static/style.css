@@ -423,6 +423,57 @@ main { padding-top: 2.5rem; min-height: 60vh; }
 .tag-lg { font-size: 0.9375rem; padding: 0.25rem 0.7rem; }
 .tag-count { opacity: 0.6; }
 
+/* --- noah's feed --------------------------------------------------------- */
+
+.noah-intro { margin-bottom: 0; }
+.noah-intro > :last-child { margin-bottom: 0; }
+
+.noah-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.noah-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.noah-item:last-child { border-bottom: 0; }
+
+/* short notes get a subtle left rule so they read as a stream */
+.noah-note {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 1rem;
+  margin-left: 0.1rem;
+}
+
+.noah-date {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--fg-faint);
+  margin-bottom: 0.35rem;
+}
+
+.noah-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.1875rem;
+  letter-spacing: -0.01em;
+}
+.noah-title a { color: var(--fg); }
+.noah-title a:hover { color: var(--accent); text-decoration: none; }
+
+.noah-summary { margin: 0 0 0.5rem; color: var(--fg-muted); font-size: 0.9375rem; }
+.noah-more { margin: 0; font-size: 0.875rem; }
+
+.noah-body > :first-child { margin-top: 0; }
+.noah-body > :last-child { margin-bottom: 0.5rem; }
+
+.noah-permalink { margin: 0; }
+.noah-permalink a { font-size: 0.8125rem; color: var(--fg-faint); }
+
+.noah-item .tag-row { margin-top: 0.6rem; }
+
 /* --- entry (the actual post) --------------------------------------------- */
 
 .entry-head { margin-bottom: 2rem; }
