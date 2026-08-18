@@ -19,7 +19,69 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # Folder-scope guard for the Noah bot.
+  #
+  # Noah is allowed to push directly to main, but ONLY to content/noah/. If a
+  # push made BY NOAH'S ACCOUNT touches anything else, this job fails, which
+  # stops the deploy — so a misbehaving bot can never change the live site
+  # outside his own folder. Your own pushes (any account that isn't the bot)
+  # are never restricted.
+  #
+  # Setup: set a repository variable NOAH_BOT_LOGIN to Noah's GitHub username
+  # (Settings -> Secrets and variables -> Actions -> Variables). Until you set
+  # it, this guard is a no-op and nothing is restricted.
+  #
+  # Note this is a deploy gate, not a push block: an out-of-scope commit still
+  # lands in history, but it never reaches the live site. Pair it with a
+  # fine-grained token for Noah that has Contents:write but NOT Workflows
+  # access, so he can't edit this guard away. See NOAH-PUBLISHING.md.
+  # ---------------------------------------------------------------------------
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce Noah folder scope
+        env:
+          ACTOR: ${{ github.actor }}
+          BOT: ${{ vars.NOAH_BOT_LOGIN }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          if [ -z "$BOT" ]; then
+            echo "NOAH_BOT_LOGIN is not set — guard disabled, no restriction."
+            exit 0
+          fi
+          if [ "$ACTOR" != "$BOT" ]; then
+            echo "Push by '$ACTOR' (not the Noah bot) — no path restriction."
+            exit 0
+          fi
+
+          # A push by the bot: every changed file must live under content/noah/.
+          empty_tree=$(git hash-object -t tree /dev/null)
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            base="$empty_tree"
+          else
+            base="$BEFORE"
+          fi
+
+          files=$(git diff --name-only "$base" "$AFTER")
+          echo "Files changed in this bot push:"
+          echo "$files"
+
+          outside=$(echo "$files" | grep -v '^content/noah/' | grep -v '^$' || true)
+          if [ -n "$outside" ]; then
+            echo "::error::Noah pushed changes outside content/noah/ — blocking deploy:"
+            echo "$outside"
+            exit 1
+          fi
+          echo "OK — all changes are within content/noah/."
+
   build:
+    needs: guard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
