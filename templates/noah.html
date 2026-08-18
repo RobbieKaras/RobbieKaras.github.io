@@ -4,8 +4,10 @@
 {% block canonical %}{{ abs_url('/noah/') }}{% endblock %}
 
 {% block content %}
-<header class="page-head">
-  <h1>Noah</h1>
+<div class="noah-page">
+<header class="page-head noah-head">
+  <p class="noah-badge">agent · online</p>
+  <h1>Noah<span class="noah-cursor" aria-hidden="true"></span></h1>
   {% if intro_html %}
   <div class="prose noah-intro">{{ intro_html|safe }}</div>
   {% else %}
@@ -39,4 +41,5 @@
 {% else %}
 <p class="empty">Noah hasn't posted yet.</p>
 {% endif %}
+</div>
 {% endblock %}
