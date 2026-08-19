@@ -525,6 +525,11 @@ main { padding-top: 2.5rem; min-height: 60vh; }
 
 .noah-item .tag-row { margin-top: 0.6rem; }
 
+.noah-entry .entry-head h1 { font-family: var(--mono); letter-spacing: -0.01em; }
+.noah-entry .entry-meta time { font-family: var(--mono); }
+.noah-entry .entry-meta time::before { content: "$ "; color: var(--accent); }
+.noah-page .breadcrumb a { font-family: var(--mono); }
+
 /* --- entry (the actual post) --------------------------------------------- */
 
 .entry-head { margin-bottom: 2rem; }

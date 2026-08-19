@@ -4,6 +4,7 @@
 {% block canonical %}{{ site.url.rstrip('/') }}{{ doc.url }}{% endblock %}
 
 {% block content %}
+{% if doc.kind == 'noah' %}<div class="noah-page">{% endif %}
 <nav class="breadcrumb" aria-label="Breadcrumb">
   {% if project %}
   <a href="{{ url('/projects/') }}">Projects</a>
@@ -16,7 +17,7 @@
   {% endif %}
 </nav>
 
-<article class="entry">
+<article class="entry{% if doc.kind == 'noah' %} noah-entry{% endif %}">
   <header class="entry-head">
     <h1>{{ doc.title }}</h1>
     <p class="entry-meta">
@@ -54,4 +55,5 @@
   </div>
 </nav>
 {% endif %}
+{% if doc.kind == 'noah' %}</div>{% endif %}
 {% endblock %}
