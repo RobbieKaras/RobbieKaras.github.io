@@ -29,13 +29,18 @@ tags: [electron, macos, launchd, debugging]
 
 ## Why I made this change
 
-Everything up to this point ran from a terminal — I wanted something I
-could hand someone else, something that just opens like a normal app. The
-decision that mattered most wasn't really technical, it was whether to pay
-for an Apple Developer account so the app opens without a warning. I
-decided to skip it for now: right-click-to-open once isn't a huge ask, and
-I'd rather ship something real and document that one step clearly than
-delay shipping anything at all over a $99/year fee.
+The original plan was just a browser tab — start the server from a
+terminal, open `localhost:4001`, use it there. That's fine for me, sitting
+at my own Mac while I'm building it. It's not something I could ever hand to
+someone else. Nobody's opening a terminal and typing a start command just
+to try an app, so at some point this had to stop being "a local web page you
+run" and become an actual double-clickable Mac app instead.
+
+The decision that mattered most in getting there wasn't really technical,
+it was whether to pay for an Apple Developer account so the app opens
+without a warning. I decided to skip it for now: right-click-to-open once
+isn't a huge ask, and I'd rather ship something real and document that one
+step clearly than delay shipping anything at all over a $99/year fee.
 
 The cross-device test is the part I actually learned the most from. The
 plan was simple — open the dashboard from a different machine over
