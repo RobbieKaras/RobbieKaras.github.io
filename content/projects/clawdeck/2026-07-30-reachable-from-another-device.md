@@ -22,26 +22,26 @@ tags: [tailscale, security, macos, launchd]
 
 ## Why I made this change
 
-The dashboard has zero authentication on any endpoint — create a bot, read
-the vault, delete anything — by deliberate design, since it's meant to be
+The dashboard has zero authentication on any endpoint, create a bot, read
+the vault, delete anything. This is by deliberate design, since it's meant to be
 one person's own install on their own machine, not a shared product. That
 meant I couldn't just widen the bind to the whole network to reach it from
-my laptop. Tailscale was the obvious answer: it's already an encrypted,
+my laptop. Tailscale was the obvious answer since it's already an encrypted,
 private network between my own devices, so binding to that IP specifically
 gets me remote access without changing the actual security tradeoff at all.
 
 The PATH bug was the more interesting problem, mostly because of how it
-first showed up: everything had worked fine right up until I stopped
+first showed up. Everything had worked fine right up until I stopped
 running the server by hand in a terminal and let it run persistently
 instead. A terminal shell inherits a real, full PATH. A background service
-launched by `launchd` does not — it gets a bare minimum one. I hadn't
+launched by `launchd` does not, it gets a bare minimum one. I hadn't
 thought about that distinction at all until things that worked a minute
 earlier started failing with `ENOENT` the moment the exact same code ran as
 a service instead.
 
 Even after I thought I'd fixed it, a narrower version of the same bug came
 back days later for one specific binary that lived somewhere I hadn't added
-yet. That's the part that actually stuck with me — this wasn't one bug, it
+yet. That's the part that actually stuck with me, this wasn't one bug, it
 was a whole category of bug, and I was going to keep hitting narrower
-versions of it anywhere a GUI- or service-launched process shells out to
+versions of it anywhere a GUI or service-launched process shells out to
 something that isn't on that minimal default PATH.

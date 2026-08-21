@@ -23,12 +23,12 @@ tags: [docker, security, nodejs]
 
 I wanted a bot to be able to read and write real files on my Mac, not just
 operate inside its own sandboxed workspace. NanoClaw already had a real
-security allowlist for exactly this — it just had no CLI surface to
+security allowlist for exactly this, it just had no CLI surface to
 actually manage it per bot, so I added one instead of building a new
 permission system from scratch.
 
 The part I went back and forth on was whether to make the user pick one
-root folder during setup, the way a lot of tools do. I decided against it —
+root folder during setup, the way a lot of tools do. I decided against it,
 requiring someone to think that far ahead before they've even used the
 feature once felt like the wrong default. Growing the allowlist the first
 time a folder actually gets used means there's nothing to configure until

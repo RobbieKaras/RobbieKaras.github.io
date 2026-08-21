@@ -25,13 +25,8 @@ tags: [github, security, git, nodejs]
 
 ## Why I made this change
 
-The cert bug was a straightforward chase — reproduce the failure inside a
-running container, check what environment variables actually get read
-versus set, find the mismatch. What actually stopped this feature, and took
-longer to work through, was something I hadn't planned for at all.
-
-I asked a bot to push a real change to a real external repo, gave it a "go
-ahead," and it refused. Not a bug — a router table showed nothing wrong on
+I made this change becuase I wanted the bots to be able to push their code in the case I gave them a project to work on. When I asked a bot to push a real change to a real external repo, gave it a "go
+ahead," and it refused. Not a bug, a router table showed nothing wrong on
 my end. The bot correctly noticed that NanoClaw had no way to actually
 attach a real identity to a chat message at all. Every message it sees, on
 any channel, looks like "unknown sender." So a message that just says "I'm
@@ -41,9 +36,9 @@ self-asserted authorization as exactly the kind of pattern it should be
 suspicious of, and it was right to.
 
 That's the honest reason `owner-verification.js` exists. Not a
-pre-planned feature — a direct response to a bot making the correct call
+preplanned feature, a direct response to a bot making the correct call
 and refusing an unverified claim of authority, including mine. The fix had
-to be something only the real account owner could plausibly produce: a
+to be something only the real account owner could plausibly produce, a
 passphrase generated once, visible only inside the dashboard's own Vault
 tab, so a bot repeating it back correctly is real signal, not just a claim
 anyone typing at it could make.
@@ -51,5 +46,5 @@ anyone typing at it could make.
 I also went back and tightened it after the first version, since it
 originally let the model use its own judgment about whether an earlier
 verification in the conversation still counted for a new, separate risky
-action. That was too loose — I made it explicit that verification doesn't
+action. That was too loose, I made it explicit that verification doesn't
 carry over, so each risky ask actually needs the phrase again.

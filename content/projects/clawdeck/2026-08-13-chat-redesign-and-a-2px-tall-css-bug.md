@@ -26,30 +26,28 @@ tags: [frontend, css, debugging, nodejs]
 
 ## Why I made this change
 
-I wanted the chat tab to actually feel like watching a real coding session —
-markdown, visible tool calls, real diffs — instead of a flat wall of reply
-text. The data to do that already existed; it just wasn't being read. Claude
+I wanted the chat tab to actually feel like watching a real coding session, like it does when using claude code. The data to do that already existed, it just wasn't being read. Claude
 Code writes full session transcripts to disk regardless of whether anything
 reads them, so this was really about building a real parser for something
 that was already there, not adding new instrumentation.
 
 The CSS bug was the most frustrating part of the whole session, because
 everything about it looked correct. Right DOM, right styles as written,
-wrong result on screen. I couldn't find it by reading the CSS — I only found
+wrong result on screen. I couldn't find it by reading the CSS, I only found
 it by opening dev tools, clicking the actual broken element, and checking
 its Computed height. Once I saw it reporting 2px despite content that
 clearly needed more, I knew it had to be a sizing calculation, not a missing
 style. `flex-shrink` on an item with `overflow` set is a genuinely
-well-known gotcha, but I didn't know it going in — I found the mechanism
+well known gotcha, but I didn't know it going in, I found the mechanism
 because the symptom pointed straight at "something is computing a size,"
 not because I recognized the pattern up front.
 
 The reset button came out of a side conversation about whether long chats
-degrade in quality over time — they do — and turned into a real feature
+degrade in quality over time, they do, and turned into a real feature
 because NanoClaw genuinely had no way to force a fresh session before this.
-One thing worth remembering from testing it: resetting clears the
+One thing worth remembering from testing it, resetting clears the
 conversation the model sees immediately, but the bot is separately
 instructed to search its own past transcript files when something
 references earlier context. So it correctly went and read its own history
-back when I asked what we'd just done, right after a reset — which looked
+back when I asked what we'd just done, right after a reset, which looked
 like a broken reset at first glance and wasn't one.

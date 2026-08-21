@@ -32,19 +32,10 @@ tags: [dashboard, nodejs, docker]
 Up to this point I could create bots and talk to them, but I had no
 visibility into what was actually happening in the background, and no way
 to fix a bot's setup without deleting it and starting over. The activity
-feed was the one I wanted most — I kept wondering whether a message had
-actually routed or just silently vanished, and had no way to check without
-digging through raw log files by hand.
+feed kept me from wondering whether a message had
+actually routed or just silently vanished.
 
 I decided early to keep it structural only, not the actual message text.
-That wasn't a technical limitation — the data's right there in the same
-logs — it was a deliberate choice to keep this feed about system health, not
+That wasn't a technical limitation, the data's right there in the same
+logs, it was a deliberate choice to keep this feed about system health, not
 turn the dashboard into something that also mirrors every conversation.
-
-The Docker fix was the most annoying one to track down, only because it
-looked like a NanoClaw bug at first. Docker just stopped installing on this
-Mac one day, no obvious reason. Turned out Docker Desktop had quietly
-raised its own minimum macOS version past what my machine runs, and the
-install page only ever links to the newest build. Once I knew that, the fix
-was simple — pin to the last version that still supports this OS instead of
-trusting the generic download link.

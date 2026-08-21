@@ -25,29 +25,28 @@ tags: [ollama, failure, macos]
 
 I wanted a genuinely free option that didn't depend on OpenRouter's free
 tier staying available, so running a model locally seemed like the obvious
-answer — no rate limits, no models disappearing overnight, nothing external
+answer with no rate limits, no models disappearing overnight, nothing external
 at all.
 
 The plumbing side actually went fine. Docker reaching Ollama without extra
-config, the macOS version wall — those were normal, solvable problems. The
+config, the macOS version wall, those were normal and solvable problems. The
 part that stopped me wasn't a bug, it was just my own hardware. I tried a
 small model first, about 2GB, fast enough to finish a real turn in under
 two minutes. It was too weak to reliably do one specific thing NanoClaw
-needs — correctly filling in who a reply is addressed to — so it kept
+needs, correctly filling in who a reply is addressed to, so it kept
 echoing its own instructions back instead of a real answer, and no reply
 ever landed. I stepped up to a bigger model that actually followed that
 instruction correctly, confirmed directly against Ollama itself. But once I
 ran it through NanoClaw's real system prompt, not a short test prompt, a
-single reply took almost two and a half minutes on this Mac's CPU — no
-GPU acceleration available to it at all — which blows past the point where
+single reply took almost two and a half minutes on this Mac's CPU, no
+GPU acceleration available to it at all, which blows past the point where
 the container gives up and calls the turn timed out.
 
-That was the actual dead end: going bigger fixed the instruction-following
+That was the actual dead end. Going bigger fixed the instruction following
 problem and made the speed problem worse, and going smaller did the
 opposite. There wasn't a middle model size that solved both at once on this
 particular machine, and I didn't have a fix for that, just a decision to
 make. I chose to stop here rather than keep throwing different model sizes
 at a problem that was really about the hardware, not the models. The code
 is still there, still working, just not something I point anyone at right
-now. If I pick it back up, the real next thing to try isn't a bigger model
-— it's a small model actually tuned for tool use instead of general chat.
+now. If I pick it back up, the real next thing to try isn't a bigger model, it's a small model actually tuned for tool use instead of general chat.

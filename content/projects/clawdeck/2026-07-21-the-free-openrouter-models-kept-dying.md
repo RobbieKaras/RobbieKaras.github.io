@@ -30,26 +30,26 @@ tags: [openrouter, failure, debugging]
 
 The idea was simple: not every conversation needs a paid model behind it,
 so give people a free option for everyday chat and save the paid one for
-real work. NanoClaw already supported per-bot providers and letting one bot
+real work. NanoClaw already supported per bot providers and letting one bot
 hand a task to another, so this felt like it should just work.
 
-It mostly didn't, and every failure was a different flavor of "the free
+For the most part it didn't work, and every failure was a different flavor of "the free
 tier is not a stable thing to build on." I'd pick three free models, verify
 they worked, and by the time I actually tested a live reply, one or more of
-them had already been pulled from OpenRouter's free tier entirely — no
+them had already been pulled from OpenRouter's free tier entirely, no
 warning, the bot's own error message was the first sign. Then I hit the
-daily free-request cap partway through a normal testing session, which
+daily free request cap partway through a normal testing session, which
 isn't a bug, just a real ceiling I hadn't planned test sessions around.
 
 The bug where two bots shared one model was the one that actually worried
-me, because it wasn't loud — nothing crashed, both bots just quietly
+me, because nothing crashed, both bots just quietly
 answered with the wrong model, and I only found it because I happened to
 ask each bot directly which model it thought it was running. That's the
 kind of bug that's genuinely dangerous specifically because there's no
 error to notice.
 
 I didn't rip this out. The backend is still there, tested at the plumbing
-level, just not wired into the UI anymore — dead free models and hard rate
+level, just not wired into the UI anymore, dead free models and hard rate
 caps aren't something I can fix, only work around, and I decided the
-free-tier tradeoffs weren't worth presenting as a first-class option to
+free tier tradeoffs weren't worth presenting as a first-class option to
 someone setting this up for the first time.

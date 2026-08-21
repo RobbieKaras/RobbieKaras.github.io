@@ -41,9 +41,9 @@ tags: [electron, macos, debugging, nodejs]
 
 ## Why I made this change
 
-Every one of these had been sitting in the code for a while, invisible,
+ I found these bugs becuase I wanted to test ClawDeck on an Apple Silicon Mac, (I have been building ClawDeck on an Intel Mac). Every one of these had been sitting in the code for a while, invisible,
 because my own Mac already had everything configured from earlier
-development — the patch that never got wired in, the CLI that was already
+development, the patch that never got wired in, the CLI that was already
 installed, the credential vault that was already running. None of that gets
 re-tested just from me using the app day to day.
 
@@ -59,9 +59,9 @@ the node-pty rewrite instead of another patch on top of a mechanism I didn't
 fully trust anymore.
 
 The pattern by the end was clear enough that I stopped treating each bug as
-one-off: anything that only runs once, at first-install, on a machine that's
+one off, anything that only runs once, at first-install, on a machine that's
 never touched this code before, is exactly the code path I have the least
-real coverage on. So the last thing I did wasn't a bug fix at all — I built
+real coverage on. So the last thing I did wasn't a bug fix at all, I built
 a disposable, isolated install just to run that exact path myself and watch
 it succeed, instead of shipping the sixth fix on faith the way the first one
 went out.
